@@ -1,0 +1,13 @@
+#+TITLE: Scripts
+
+These are some scripts I've written and use often.
+
+* Iboarddown.py
+
+Downloads all the files in a thread from some imageboard.
+
+Usage:
+#+BEGIN_SRC bash
+  ./iboarddown.py https://boards.4chan.org/g/thread/51971506
+#+END_SRC
+
