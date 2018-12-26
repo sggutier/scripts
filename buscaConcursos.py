@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import requests
 import os
 import sys
@@ -57,7 +59,7 @@ def print_help():
 
 if __name__ == '__main__':
     args = sys.argv[1:]
-    if len(args) < 1 and tn is None:
+    if len(args) < 1:
         print_help()
         exit(-1)
     printConts(notmain(*args))
