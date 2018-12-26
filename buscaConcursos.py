@@ -33,7 +33,7 @@ def getAllCs(subs):
     return conts
 
 
-def main(user, pini, cnt):
+def notmain(user, pini=1, cnt=500):
     url = makeCFLink(user, pini, cnt)
     subs = requests.get(url).json()['result']
     return getContests(subs)
@@ -49,3 +49,15 @@ def printConts(conts, gymOnly=False):
     for c, dt in conts.items():
         if not gymOnly or c > 1000:
             print("{0} :: {1}".format(c, time.strftime("%Y-%m-%d %H:%M:%S", dt)))
+
+
+def print_help():
+    print('usage: ./buscaConcursos.py codeforcesuser')
+
+
+if __name__ == '__main__':
+    args = sys.argv[1:]
+    if len(args) < 1 and tn is None:
+        print_help()
+        exit(-1)
+    printConts(notmain(*args))
