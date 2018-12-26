@@ -5,6 +5,7 @@ import requests
 import os
 import sys
 import itertools
+import re
 
 
 flat = itertools.chain.from_iterable
@@ -41,24 +42,28 @@ def isDownloaded(d):
 
 
 def set_board(lnk):
-    global chan, mserv, board
+    global mserv, chan, board, jurl
     lnk = lnk.split(r"/")[2:]
     chan, board = lnk[0], lnk[1]
-    if chan == "boards.4chan.org" or chan == "4chan.org":
+    if re.match('.*4chan(nel|)\.org.*', chan):
         mserv = "i.4cdn.org"
+        chan = "a.4cdn.org"
+        jurl = 'a.4cdn.org/{}/thread/{}.json'
     elif chan == "8ch.net":
         mserv = "media.8ch.net"
+        jurl = '8ch.net/{}/res/{}.json'
     else:
         mserv = chan + ''
-    mserv = 'https://' + mserv
+        jurl = chan + '/{}/res/{}.json'
     chan = 'https://' + chan
+    jurl = 'https://' + jurl
+    mserv = 'https://' + mserv
     return lnk[-1:][0].split('.')[0]
 
 
 def getFilList(tn):
-    global chan, board, post
-    post = 'res/{}.json'.format(tn)
-    url = '/'.join([chan, board, post])
+    global chan, board, post, jurl
+    url = jurl.format(board, tn)
     print(url)
     posts = requests.get(url).json()['posts']
     files = flat([[(get_filename(post), get_filepath(post))
@@ -80,12 +85,14 @@ def print_help():
 
 def main(tn=None, dest_dir="./"):
     args = sys.argv[1:]
-    if len(args) < 1:
+    if len(args) < 1 and tn is None:
         print_help()
         return -1
-    tn = args[0]
+    if tn is None:
+        tn = args[0]
     if len(args) > 1:
         dest_dir = args[1]
+    print(f'el tab es {set_board(tn)}')
     files = getFilList(set_board(tn))
     for name, path in files:
         print("Downloading: \"" + name + "\"")
