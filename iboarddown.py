@@ -95,7 +95,8 @@ def main(tn=None, dest_dir="./"):
     print(f'el tab es {set_board(tn)}')
     files = getFilList(set_board(tn))
     for name, path in files:
-        print("Downloading: \"" + name + "\"")
+        print("Downloading: \"" + name + "\"" + "from " + path)
+        # print(path)
         r = requests.get(path)
         with open(os.path.join(dest_dir, name), 'wb') as fd:
             fd.write(r.content)
